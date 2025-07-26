@@ -1,0 +1,541 @@
+        function formWords() {
+            const words = ['CAPITAL', 'CONFIDENCE', 'CREDIBILITY'];
+            const wordElements = centerText.querySelectorAll('.center-word');
+            
+            words.forEach((word, wordIndex) => {
+                setTimeout(() => {
+                    const wordElement = wordElements[wordIndex];
+                    wordElement.classList.add('forming');
+                    
+                    // Split word into individual characters and animate each
+                    wordElement.innerHTML = '';
+                    
+                    [...word].forEach((char, charIndex) => {
+                        setTimeout(() => {
+                            const charSpan = document.createElement('span');
+                            charSpan.className = 'forming-char';
+                            charSpan.textContent = char;
+                            charSpan.style.animationDelay = (charIndex * 0.08) + 's';
+                            wordElement.appendChild(charSpan);
+                        }, charIndex * 80);
+                    });
+                    
+                }, wordIndex * 1200);
+            });
+        }<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Kernel Code Hurricane - Full Screen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000000;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        .code-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .code-char {
+            position: absolute;
+            font-size: 11px;
+            font-weight: 300;
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.9;
+            letter-spacing: 0;
+        }
+        
+        .code-char.color1 {
+            color: #00C785;
+        }
+        
+        .code-char.color2 {
+            color: #4A58D6;
+        }
+    </style>
+</head>
+<body>
+    <div class="code-container" id="codeContainer"></div>
+
+    <script>
+        // Linux kernel code lines
+        const linuxKernelCode = [
+            "asmlinkage __visible void __init start_kernel(void) {",
+            "    char *command_line, *after_dashes;",
+            "    set_task_stack_end_magic(&init_task);",
+            "    smp_setup_processor_id();",
+            "    debug_objects_early_init();",
+            "    cgroup_init_early();",
+            "    local_irq_disable();",
+            "    early_boot_irqs_disabled = true;",
+            "    boot_cpu_init();",
+            "    page_address_init();",
+            "    pr_notice(\"%s\", linux_banner);",
+            "    early_security_init();",
+            "    setup_arch(&command_line);",
+            "    setup_boot_config();",
+            "    setup_command_line(command_line);",
+            "    setup_nr_cpu_ids();",
+            "    setup_per_cpu_areas();",
+            "    smp_prepare_boot_cpu();",
+            "    boot_cpu_hotplug_init();",
+            "    build_all_zonelists(NULL);",
+            "    page_alloc_init();",
+            "    parse_early_param();",
+            "    jump_label_init();",
+            "    setup_log_buf(0);",
+            "    vfs_caches_init_early();",
+            "    sort_main_extable();",
+            "    trap_init(); mm_init();",
+            "    ftrace_init(); early_trace_init();",
+            "    sched_init(); radix_tree_init();",
+            "    housekeeping_init();",
+            "    workqueue_init_early();",
+            "    rcu_init(); trace_init();",
+            "    context_tracking_init();",
+            "    early_irq_init(); init_IRQ();",
+            "    tick_init(); rcu_init_nohz();",
+            "    init_timers(); hrtimers_init();",
+            "    softirq_init(); timekeeping_init();",
+            "    time_init(); perf_event_init();",
+            "    profile_init(); call_function_init();",
+            "    early_boot_irqs_disabled = false;",
+            "    local_irq_enable();",
+            "    kmem_cache_init_late();",
+            "    console_init(); lockdep_init();",
+            "    locking_selftest(); page_ext_init();",
+            "    kmemleak_init();",
+            "    debug_objects_mem_init();",
+            "    setup_per_cpu_pageset();",
+            "    numa_policy_init(); acpi_early_init();",
+            "    sched_clock_init(); calibrate_delay();",
+            "    pid_idr_init(); anon_vma_init();",
+            "    thread_stack_cache_init(); cred_init();",
+            "    fork_init(); proc_caches_init();",
+            "    uts_ns_init(); buffer_init();",
+            "    key_init(); security_init();",
+            "    dbg_late_init(); vfs_caches_init();",
+            "    pagecache_init(); signals_init();",
+            "    seq_file_init(); proc_root_init();",
+            "    nsfs_init(); cpuset_init();",
+            "    cgroup_init(); taskstats_init_early();",
+            "    delayacct_init(); arch_call_rest_init();",
+            "} void *kmalloc(size_t size, gfp_t flags) {",
+            "    struct kmem_cache *cachep; void *ret;",
+            "    if (unlikely(size > KMALLOC_MAX_CACHE_SIZE))",
+            "        return kmalloc_large(size, flags);",
+            "    cachep = kmalloc_slab(size, flags);",
+            "    if (unlikely(ZERO_OR_NULL_PTR(cachep)))",
+            "        return cachep;",
+            "    ret = slab_alloc(cachep, flags, _RET_IP_);",
+            "    trace_kmalloc(_RET_IP_, ret, size, cachep->size, flags);",
+            "    kasan_kmalloc(cachep, ret, size, flags);",
+            "    return ret; } void kfree(const void *objp) {",
+            "    struct kmem_cache *c; unsigned long flags;",
+            "    trace_kfree(_RET_IP_, objp);",
+            "    if (unlikely(ZERO_OR_NULL_PTR(objp))) return;",
+            "    local_irq_save(flags); kfree_debugcheck(objp);",
+            "    c = virt_to_cache(objp);",
+            "    debug_check_no_locks_freed(objp, c->object_size);",
+            "    debug_check_no_obj_freed(objp, c->object_size);",
+            "    __cache_free(c, (void *)objp, _RET_IP_);",
+            "    local_irq_restore(flags); }",
+            "SYSCALL_DEFINE3(read, unsigned int, fd,",
+            "               char __user *, buf, size_t, count) {",
+            "    return ksys_read(fd, buf, count); }",
+            "SYSCALL_DEFINE3(write, unsigned int, fd,",
+            "               const char __user *, buf, size_t, count) {",
+            "    return ksys_write(fd, buf, count); }",
+            "SYSCALL_DEFINE1(close, unsigned int, fd) {",
+            "    int retval = close_fd(fd);",
+            "    if (unlikely(retval == -ERESTARTSYS ||",
+            "                 retval == -ERESTARTNOINTR ||",
+            "                 retval == -ERESTARTNOHAND ||",
+            "                 retval == -ERESTART_RESTARTBLOCK))",
+            "        retval = -EINTR; return retval; }",
+            "static inline void spin_lock(spinlock_t *lock) {",
+            "    raw_spin_lock(&lock->rlock); }",
+            "static inline void spin_unlock(spinlock_t *lock) {",
+            "    raw_spin_unlock(&lock->rlock); }",
+            "void mutex_lock(struct mutex *lock) {",
+            "    might_sleep();",
+            "    if (!__mutex_trylock_fast(lock))",
+            "        __mutex_lock_slowpath(lock); }",
+            "void mutex_unlock(struct mutex *lock) {",
+            "    if (__mutex_unlock_fast(lock)) return;",
+            "    __mutex_unlock_slowpath(lock, _RET_IP_); }",
+            "irqreturn_t irq_handler(int irq, void *dev_id) {",
+            "    pr_info(\"Interrupt occurred on IRQ %d\\n\", irq);",
+            "    return IRQ_HANDLED; } struct vm_area_struct *find_vma(",
+            "struct mm_struct *mm, unsigned long addr) {",
+            "    struct vm_area_struct *vma = NULL;",
+            "    if (mm) { vma = mm->mmap_cache;",
+            "        if (!(vma && vma->vm_end > addr && vma->vm_start <= addr)) {",
+            "            struct rb_node *rb_node = mm->mm_rb.rb_node;",
+            "            vma = NULL; while (rb_node) {",
+            "                struct vm_area_struct *vma_tmp;",
+            "                vma_tmp = rb_entry(rb_node, struct vm_area_struct, vm_rb);",
+            "                if (vma_tmp->vm_end > addr) {",
+            "                    vma = vma_tmp;",
+            "                    if (vma_tmp->vm_start <= addr) break;",
+            "                    rb_node = rb_node->rb_left;",
+            "                } else rb_node = rb_node->rb_right; }",
+            "            if (vma) mm->mmap_cache = vma; } }",
+            "    return vma; } module_init(hello_init);",
+            "module_exit(hello_exit); MODULE_LICENSE(\"GPL\");",
+            "MODULE_AUTHOR(\"Linux Kernel Contributors\");",
+            "#include <linux/init.h> #include <linux/kernel.h>",
+            "#include <linux/module.h> #include <linux/slab.h>",
+            "#include <linux/mm.h> #include <linux/syscalls.h>",
+            "#include <linux/fs.h> #include <linux/proc_fs.h>",
+            "#include <linux/uaccess.h> #include <linux/sched.h>",
+            "#include <linux/interrupt.h> #include <linux/spinlock.h>",
+            "#include <linux/mutex.h> #include <linux/atomic.h>",
+            "#include <linux/workqueue.h> #include <linux/timer.h>",
+            "#include <linux/kthread.h> struct task_struct *kthread_create(",
+            "int (*threadfn)(void *data), void *data, int node,",
+            "const char namefmt[], ...) { struct task_struct *task;",
+            "struct kthread_create_info *create = kmalloc(sizeof(*create), GFP_KERNEL);",
+            "if (!create) return ERR_PTR(-ENOMEM);",
+            "create->threadfn = threadfn; create->data = data;",
+            "create->node = node; create->result = &done;",
+            "spin_lock(&kthread_create_lock);",
+            "list_add_tail(&create->list, &kthread_create_list);",
+            "spin_unlock(&kthread_create_lock);",
+            "wake_up_process(kthreadd_task);",
+            "task = create->result; if (!IS_ERR(task)) {",
+            "    static const struct sched_param param = { .sched_priority = 0 };",
+            "    va_list args; va_start(args, namefmt);",
+            "    vsnprintf(task->comm, sizeof(task->comm), namefmt, args);",
+            "    va_end(args);",
+            "    sched_setscheduler_nocheck(task, SCHED_NORMAL, &param);",
+            "    set_cpus_allowed_ptr(task, cpu_all_mask); }",
+            "kfree(create); return task; }"
+        ];
+
+        const container = document.getElementById('codeContainer');
+        let characters = [];
+        let codeIndex = 0;
+        let swirlTime = 0;
+        let maxCharacters = 0;
+        let wordFormationStarted = false;
+        let formedWords = [];
+
+        // Letters needed for the words
+        const neededLetters = ['C', 'A', 'P', 'I', 'T', 'A', 'L', 'C', 'O', 'N', 'F', 'I', 'D', 'E', 'N', 'C', 'E', 'C', 'R', 'E', 'D', 'I', 'B', 'I', 'L', 'I', 'T', 'Y'];
+        let letterIndex = 0;
+
+        // Flatten all code into one continuous string
+        let allCode = linuxKernelCode.join(' ');
+
+        function calculateMaxCharacters() {
+            const charWidth = 6.6;
+            const charHeight = 13;
+            const screenArea = window.innerWidth * window.innerHeight;
+            const charactersPerArea = screenArea / (charWidth * charHeight);
+            maxCharacters = Math.floor(charactersPerArea * 2);
+        }
+
+        function startWordFormation() {
+            if (letterIndex >= neededLetters.length) return;
+            
+            const targetLetter = neededLetters[letterIndex];
+            
+            // Find a character with the matching letter
+            const matchingChar = characters.find(char => 
+                char.char.toUpperCase() === targetLetter && !char.isForming
+            );
+            
+            if (matchingChar) {
+                matchingChar.isForming = true;
+                
+                // Calculate position in the word layout
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                
+                // Determine which word and position within word
+                let wordIndex = 0;
+                let positionInWord = letterIndex;
+                
+                if (letterIndex >= 7) { // CONFIDENCE starts at index 7
+                    wordIndex = 1;
+                    positionInWord = letterIndex - 7;
+                }
+                if (letterIndex >= 17) { // CREDIBILITY starts at index 17
+                    wordIndex = 2;
+                    positionInWord = letterIndex - 17;
+                }
+                
+                // Calculate target position
+                const charWidth = 7; // Approximate character width
+                const lineHeight = 20; // Line spacing
+                
+                // Center the words
+                const wordLengths = [7, 10, 11]; // CAPITAL, CONFIDENCE, CREDIBILITY
+                const wordStartX = centerX - (wordLengths[wordIndex] * charWidth) / 2;
+                
+                matchingChar.formTargetX = wordStartX + (positionInWord * charWidth);
+                matchingChar.formTargetY = centerY - 30 + (wordIndex * lineHeight);
+                
+                // Change color to green when forming
+                matchingChar.element.className = 'code-char color1';
+                
+                formedWords.push(matchingChar);
+                letterIndex++;
+                
+                // Continue forming next letter after a delay
+                setTimeout(() => {
+                    startWordFormation();
+                }, 200);
+            } else {
+                // If no matching character found, try again after a short delay
+                setTimeout(() => {
+                    startWordFormation();
+                }, 100);
+            }
+        }
+
+        function createCharacter(char, globalIndex) {
+            const charElement = document.createElement('div');
+            charElement.className = `code-char ${Math.floor(globalIndex / 150) % 2 === 0 ? 'color1' : 'color2'}`;
+            charElement.textContent = char;
+            container.appendChild(charElement);
+            
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            const startX = Math.random() * window.innerWidth;
+            const startY = Math.random() * window.innerHeight;
+            
+            const deltaX = startX - centerX;
+            const deltaY = startY - centerY;
+            const initialAngle = Math.atan2(deltaY, deltaX);
+            const initialRadius = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            const spiralOffset = globalIndex * 0.02;
+            
+            return {
+                element: charElement,
+                char: char,
+                globalIndex: globalIndex,
+                angle: initialAngle + spiralOffset,
+                radius: Math.max(50, initialRadius),
+                baseAngle: initialAngle + spiralOffset,
+                baseRadius: Math.max(50, initialRadius),
+                centerX: centerX,
+                centerY: centerY,
+                x: startX,
+                y: startY,
+                targetX: startX,
+                targetY: startY,
+                opacity: 1,
+                isForming: false,
+                formTargetX: 0,
+                formTargetY: 0
+            };
+        }
+
+        function updateSwirlPositions(time) {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const rotationSpeed = 0.0006;
+            const maxRadius = Math.max(window.innerWidth, window.innerHeight) * 0.8;
+            
+            characters.forEach((char, index) => {
+                char.centerX = centerX;
+                char.centerY = centerY;
+                
+                if (char.isForming) {
+                    // Move towards word formation position
+                    char.x += (char.formTargetX - char.x) * 0.05;
+                    char.y += (char.formTargetY - char.y) * 0.05;
+                    char.opacity = 1; // Keep formed letters visible
+                } else {
+                    // Normal swirl motion
+                    char.angle += rotationSpeed;
+                    
+                    const targetRadius = char.baseRadius * (1 - (time * 0.00005));
+                    char.radius += (Math.max(80, targetRadius) - char.radius) * 0.002;
+                    
+                    const radiusVariation = Math.sin(time * 0.0008 + char.baseAngle * 2) * 12;
+                    const finalRadius = char.radius + radiusVariation;
+                    
+                    char.targetX = char.centerX + Math.cos(char.angle) * finalRadius;
+                    char.targetY = char.centerY + Math.sin(char.angle) * finalRadius;
+                    
+                    char.x += (char.targetX - char.x) * 0.03;
+                    char.y += (char.targetY - char.y) * 0.03;
+                    
+                    const distanceFromCenter = Math.sqrt((char.x - centerX) ** 2 + (char.y - centerY) ** 2);
+                    
+                    if (distanceFromCenter < 120) {
+                        char.opacity = Math.max(0.4, distanceFromCenter / 120);
+                    } else if (distanceFromCenter > maxRadius) {
+                        char.opacity = Math.max(0, 1 - ((distanceFromCenter - maxRadius) / 200));
+                    } else {
+                        char.opacity = 0.9;
+                    }
+                    
+                    // Remove characters only when very far out and not forming words
+                    if (distanceFromCenter > maxRadius + 300) {
+                        if (char.element.parentNode) {
+                            container.removeChild(char.element);
+                        }
+                        characters.splice(index, 1);
+                        return;
+                    }
+                }
+                
+                char.element.style.left = char.x + 'px';
+                char.element.style.top = char.y + 'px';
+                char.element.style.opacity = char.opacity;
+            });
+        }
+
+        function addNewCharacters() {
+            const charactersToAdd = Math.min(12, maxCharacters - characters.length);
+            
+            for (let i = 0; i < charactersToAdd; i++) {
+                if (codeIndex >= allCode.length) {
+                    codeIndex = 0;
+                }
+                
+                const char = allCode[codeIndex];
+                const newChar = createCharacter(char, characters.length);
+                characters.push(newChar);
+                codeIndex++;
+            }
+        }
+
+        function animate(timestamp) {
+            swirlTime = timestamp;
+            addNewCharacters();
+            updateSwirlPositions(timestamp);
+            
+            // Start word formation after 8 seconds
+            if (!wordFormationStarted && timestamp > 8000) {
+                wordFormationStarted = true;
+                startWordFormation();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        calculateMaxCharacters();
+        requestAnimationFrame(animate);
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            calculateMaxCharacters();
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            characters.forEach(char => {
+                char.centerX = centerX;
+                char.centerY = centerY;
+            });
+        });
+    </script>Y = char.centerY + Math.sin(char.angle) * finalRadius;
+                
+                // Smooth interpolation for fluid motion
+                char.x += (char.targetX - char.x) * 0.03;
+                char.y += (char.targetY - char.y) * 0.03;
+                
+                // Apply position
+                char.element.style.left = char.x + 'px';
+                char.element.style.top = char.y + 'px';
+                
+                // Calculate opacity - much more lenient boundaries
+                const distanceFromCenter = Math.sqrt((char.x - centerX) ** 2 + (char.y - centerY) ** 2);
+                
+                if (distanceFromCenter < 120) {
+                    // Keep more characters visible near center
+                    char.opacity = Math.max(0.4, distanceFromCenter / 120);
+                } else if (distanceFromCenter > maxRadius) {
+                    // Fade out at far edges
+                    char.opacity = Math.max(0, 1 - ((distanceFromCenter - maxRadius) / 200));
+                } else {
+                    char.opacity = 0.9;
+                }
+                
+                char.element.style.opacity = char.opacity;
+                
+                // Remove characters only when very far out
+                if (distanceFromCenter > maxRadius + 300) {
+                    if (char.element.parentNode) {
+                        container.removeChild(char.element);
+                    }
+                    characters.splice(index, 1);
+                }
+            });
+        }
+
+        function addNewCharacters() {
+            // Continuously add characters to maintain density
+            const charactersToAdd = Math.min(12, maxCharacters - characters.length);
+            
+            for (let i = 0; i < charactersToAdd; i++) {
+                if (codeIndex >= allCode.length) {
+                    codeIndex = 0; // Loop the code
+                }
+                
+                const char = allCode[codeIndex];
+                const newChar = createCharacter(char, characters.length);
+                characters.push(newChar);
+                codeIndex++;
+            }
+        }
+
+        function animate(timestamp) {
+            swirlTime = timestamp;
+            
+            addNewCharacters();
+            updateSwirlPositions(timestamp);
+            
+            // Show center text after 8 seconds - no character convergence
+            if (!textVisible && timestamp > 8000) {
+                textVisible = true;
+                centerText.classList.add('visible');
+                formWords();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        calculateMaxCharacters();
+        
+        // Start animation
+        requestAnimationFrame(animate);
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            calculateMaxCharacters();
+            
+            // Update center positions for all characters
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            characters.forEach(char => {
+                char.centerX = centerX;
+                char.centerY = centerY;
+            });
+        });
+    </script>
+</body>
+</html>
